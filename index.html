@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Chatbot Véhicules Autonomes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    body{
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    df-messenger{
+      --df-messenger-bot-message: #e0e0e0;
+      --df-messenger-button-titlebar-color: #1976d2;
+      --df-messenger-chat-background-color: #f5f5f5;
+      --df-messenger-font-color: black;
+      --df-messenger-user-message: #c8e6c9;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Chatbot : IA et Véhicules Autonomes</h1>
+<p>Posez vos questions sur les véhicules autonomes et l’intelligence artificielle.</p>
+
+
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger
+  intent="WELCOME"
+  chat-title="VehiculesAutonomesBot"
+  agent-id="1ec1aa15-cdae-42b6-a98b-2c8661fb24e1"
+  language-code="fr"
+></df-messenger>
