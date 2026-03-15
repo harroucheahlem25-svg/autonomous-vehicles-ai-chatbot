@@ -1,37 +1,482 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Chatbot Véhicules Autonomes</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IA et Véhicules Autonomes</title>
 
   <style>
+    :root{
+      --bg: #f7f1e8;
+      --bg-soft: #efe4d3;
+      --primary: #6f4e37;
+      --primary-dark: #4e3426;
+      --accent: #c89b6d;
+      --text: #2e241d;
+      --card: rgba(255,255,255,0.72);
+      --border: rgba(111,78,55,0.15);
+      --shadow: 0 12px 30px rgba(70, 45, 28, 0.12);
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
     body{
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 50px;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background:
+        radial-gradient(circle at top left, #fff7ef 0%, transparent 30%),
+        radial-gradient(circle at bottom right, #ead8c2 0%, transparent 25%),
+        linear-gradient(135deg, #f8f3eb, #efe2d2);
+      color: var(--text);
+      min-height:100vh;
+    }
+
+    .navbar{
+      width:100%;
+      padding:20px 8%;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      position:sticky;
+      top:0;
+      backdrop-filter: blur(8px);
+      background: rgba(247,241,232,0.78);
+      border-bottom:1px solid rgba(111,78,55,0.08);
+      z-index:10;
+    }
+
+    .logo{
+      font-size:1.2rem;
+      font-weight:700;
+      color:var(--primary-dark);
+      letter-spacing:0.5px;
+    }
+
+    .logo span{
+      color:var(--accent);
+    }
+
+    .nav-tag{
+      background: rgba(111,78,55,0.08);
+      color:var(--primary-dark);
+      padding:10px 16px;
+      border-radius:999px;
+      font-size:0.9rem;
+      font-weight:600;
+    }
+
+    .hero{
+      width:100%;
+      padding:70px 8% 40px;
+      display:grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap:40px;
+      align-items:center;
+    }
+
+    .hero-text h1{
+      font-size:3rem;
+      line-height:1.15;
+      color:var(--primary-dark);
+      margin-bottom:18px;
+    }
+
+    .hero-text h1 span{
+      color:var(--accent);
+    }
+
+    .hero-text p{
+      font-size:1.08rem;
+      line-height:1.8;
+      max-width:650px;
+      color:#4a3a2f;
+      margin-bottom:28px;
+    }
+
+    .hero-buttons{
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      display:inline-block;
+      padding:14px 22px;
+      border-radius:14px;
+      text-decoration:none;
+      font-weight:600;
+      transition:0.3s ease;
+    }
+
+    .btn-primary{
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color:white;
+      box-shadow: var(--shadow);
+    }
+
+    .btn-primary:hover{
+      transform:translateY(-2px);
+    }
+
+    .btn-secondary{
+      background: rgba(255,255,255,0.65);
+      color:var(--primary-dark);
+      border:1px solid rgba(111,78,55,0.18);
+    }
+
+    .btn-secondary:hover{
+      background:white;
+    }
+
+    .hero-visual{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .visual-card{
+      width:100%;
+      max-width:520px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.78), rgba(255,255,255,0.55));
+      border:1px solid var(--border);
+      border-radius:28px;
+      box-shadow: var(--shadow);
+      padding:26px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .glow{
+      position:absolute;
+      width:180px;
+      height:180px;
+      background: radial-gradient(circle, rgba(200,155,109,0.24), transparent 70%);
+      border-radius:50%;
+      top:-30px;
+      right:-20px;
+    }
+
+    .metrics{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-top:20px;
+    }
+
+    .metric{
+      background: rgba(255,255,255,0.72);
+      border:1px solid rgba(111,78,55,0.1);
+      border-radius:18px;
+      padding:14px;
+      text-align:center;
+    }
+
+    .metric strong{
+      display:block;
+      font-size:1.1rem;
+      color:var(--primary-dark);
+      margin-bottom:4px;
+    }
+
+    .metric span{
+      font-size:0.85rem;
+      color:#5e4d40;
+    }
+
+    .section{
+      padding:30px 8% 70px;
+    }
+
+    .section-title{
+      text-align:center;
+      margin-bottom:35px;
+    }
+
+    .section-title h2{
+      font-size:2rem;
+      color:var(--primary-dark);
+      margin-bottom:10px;
+    }
+
+    .section-title p{
+      max-width:760px;
+      margin:auto;
+      line-height:1.7;
+      color:#5c4c40;
+    }
+
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
+      gap:22px;
+    }
+
+    .card{
+      background: var(--card);
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:24px;
+      box-shadow: var(--shadow);
+      transition:0.3s ease;
+    }
+
+    .card:hover{
+      transform:translateY(-4px);
+    }
+
+    .icon{
+      width:52px;
+      height:52px;
+      border-radius:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.4rem;
+      margin-bottom:16px;
+      background: linear-gradient(135deg, rgba(200,155,109,0.25), rgba(111,78,55,0.18));
+    }
+
+    .card h3{
+      color:var(--primary-dark);
+      margin-bottom:10px;
+      font-size:1.15rem;
+    }
+
+    .card p{
+      line-height:1.7;
+      color:#554539;
+      font-size:0.97rem;
+    }
+
+    .about{
+      margin-top:28px;
+      background: linear-gradient(135deg, rgba(111,78,55,0.95), rgba(78,52,38,0.96));
+      color:white;
+      border-radius:28px;
+      padding:34px;
+      box-shadow: var(--shadow);
+    }
+
+    .about h3{
+      font-size:1.5rem;
+      margin-bottom:12px;
+    }
+
+    .about p{
+      line-height:1.9;
+      color:#f4e7d8;
+    }
+
+    footer{
+      padding:24px;
+      text-align:center;
+      color:#5f4c3e;
+      font-size:0.95rem;
     }
 
     df-messenger{
-      --df-messenger-bot-message: #e0e0e0;
-      --df-messenger-button-titlebar-color: #1976d2;
-      --df-messenger-chat-background-color: #f5f5f5;
-      --df-messenger-font-color: black;
-      --df-messenger-user-message: #c8e6c9;
+      --df-messenger-bot-message: #ede2d3;
+      --df-messenger-button-titlebar-color: #6f4e37;
+      --df-messenger-chat-background-color: #fffaf4;
+      --df-messenger-font-color: #2e241d;
+      --df-messenger-user-message: #d9b48f;
+    }
+
+    @media (max-width: 950px){
+      .hero{
+        grid-template-columns:1fr;
+        padding-top:50px;
+      }
+
+      .hero-text{
+        text-align:center;
+      }
+
+      .hero-text p{
+        margin-left:auto;
+        margin-right:auto;
+      }
+
+      .hero-buttons{
+        justify-content:center;
+      }
+    }
+
+    @media (max-width: 600px){
+      .hero-text h1{
+        font-size:2.2rem;
+      }
+
+      .metrics{
+        grid-template-columns:1fr;
+      }
     }
   </style>
 </head>
-
 <body>
 
-<h1>Chatbot : IA et Véhicules Autonomes</h1>
-<p>Posez vos questions sur les véhicules autonomes et l’intelligence artificielle.</p>
+  <nav class="navbar">
+    <div class="logo">Auto<span>Vision IA</span></div>
+    <div class="nav-tag">Chatbot éducatif intelligent</div>
+  </nav>
 
+  <section class="hero">
+    <div class="hero-text">
+      <h1>L’intelligence artificielle au cœur des <span>véhicules autonomes</span></h1>
+      <p>
+        Ce site présente un chatbot pédagogique dédié aux véhicules autonomes. 
+        Il permet de comprendre leur fonctionnement, le rôle de l’intelligence artificielle, 
+        les capteurs utilisés, les avantages, les risques et les perspectives futures de cette technologie.
+      </p>
 
-<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-<df-messenger
-  intent="WELCOME"
-  chat-title="VehiculesAutonomesBot"
-  agent-id="1ec1aa15-cdae-42b6-a98b-2c8661fb24e1"
-  language-code="fr"
-></df-messenger>
+      <div class="hero-buttons">
+        <a href="#projet" class="btn btn-primary">Découvrir le projet</a>
+        <a href="#fonctionnalites" class="btn btn-secondary">Explorer les fonctionnalités</a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="visual-card">
+        <div class="glow"></div>
+
+        <svg viewBox="0 0 600 340" width="100%" height="auto" aria-label="Illustration voiture autonome">
+          <defs>
+            <linearGradient id="carBody" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#6f4e37"/>
+              <stop offset="100%" stop-color="#3f2a1f"/>
+            </linearGradient>
+            <linearGradient id="glass" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#e9d7bf"/>
+              <stop offset="100%" stop-color="#c89b6d"/>
+            </linearGradient>
+          </defs>
+
+          <rect x="30" y="220" width="540" height="8" rx="4" fill="#d9c3aa"/>
+          <circle cx="180" cy="235" r="42" fill="#2e241d"/>
+          <circle cx="180" cy="235" r="20" fill="#c8a27d"/>
+          <circle cx="430" cy="235" r="42" fill="#2e241d"/>
+          <circle cx="430" cy="235" r="20" fill="#c8a27d"/>
+
+          <path d="M110 195 L145 140 Q170 105 240 105 L355 105 Q415 105 455 145 L500 195 Z" fill="url(#carBody)"/>
+          <rect x="120" y="165" width="390" height="45" rx="20" fill="url(#carBody)"/>
+          <path d="M215 115 L338 115 Q385 115 418 150 L280 150 Q248 150 225 135 Z" fill="url(#glass)" opacity="0.95"/>
+          <line x1="300" y1="118" x2="300" y2="150" stroke="#6f4e37" stroke-width="4"/>
+
+          <rect x="132" y="177" width="48" height="14" rx="7" fill="#ffd8a8"/>
+          <rect x="455" y="177" width="42" height="14" rx="7" fill="#ffcf99"/>
+
+          <circle cx="305" cy="88" r="14" fill="#c89b6d"/>
+          <circle cx="305" cy="88" r="6" fill="#4e3426"/>
+
+          <path d="M305 88 C250 35, 150 30, 110 72" stroke="#c89b6d" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.8"/>
+          <path d="M305 88 C355 30, 465 28, 510 78" stroke="#c89b6d" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.8"/>
+          <path d="M305 88 C305 28, 305 18, 305 8" stroke="#c89b6d" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.8"/>
+
+          <circle cx="110" cy="72" r="4" fill="#c89b6d"/>
+          <circle cx="510" cy="78" r="4" fill="#c89b6d"/>
+          <circle cx="305" cy="8" r="4" fill="#c89b6d"/>
+        </svg>
+
+        <div class="metrics">
+          <div class="metric">
+            <strong>IA</strong>
+            <span>Analyse temps réel</span>
+          </div>
+          <div class="metric">
+            <strong>Capteurs</strong>
+            <span>Caméras, radar, lidar</span>
+          </div>
+          <div class="metric">
+            <strong>Mobilité</strong>
+            <span>Transport intelligent</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="fonctionnalites">
+    <div class="section-title">
+      <h2>Ce que ce chatbot peut expliquer</h2>
+      <p>
+        Le chatbot répond à des questions essentielles sur les véhicules autonomes de manière simple, claire et pédagogique.
+      </p>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="icon">⚙️</div>
+        <h3>Fonctionnement</h3>
+        <p>
+          Comprendre comment un véhicule autonome perçoit son environnement, traite les données et prend des décisions de conduite.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="icon">🧠</div>
+        <h3>Rôle de l’IA</h3>
+        <p>
+          Découvrir comment l’intelligence artificielle reconnaît les obstacles, analyse la route et améliore la conduite automatisée.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="icon">📡</div>
+        <h3>Capteurs utilisés</h3>
+        <p>
+          Explorer l’utilité des caméras, radars, lidars et systèmes de localisation dans la perception du véhicule.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="icon">✅</div>
+        <h3>Avantages</h3>
+        <p>
+          Mettre en avant la sécurité routière, la fluidité du trafic, l’assistance à la mobilité et l’optimisation des déplacements.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="icon">⚠️</div>
+        <h3>Risques et limites</h3>
+        <p>
+          Identifier les défis techniques, juridiques, éthiques et sécuritaires liés à l’adoption des véhicules autonomes.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="icon">🚗</div>
+        <h3>Vision du futur</h3>
+        <p>
+          Comprendre comment cette technologie pourrait transformer les villes intelligentes et les systèmes de transport modernes.
+        </p>
+      </div>
+    </div>
+
+    <div class="about" id="projet">
+      <h3>Présentation du projet</h3>
+      <p>
+        Ce projet universitaire a pour objectif de concevoir un chatbot intelligent à l’aide de Dialogflow afin de sensibiliser les utilisateurs au rôle de l’intelligence artificielle dans les véhicules autonomes. 
+        L’interface web a été pensée pour offrir une présentation moderne, immersive et cohérente avec la thématique du transport intelligent.
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    Projet académique — Chatbot sur l’intelligence artificielle et les véhicules autonomes
+  </footer>
+
+  <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+
+  <df-messenger
+    intent="WELCOME"
+    chat-title="VehiculesAutonomesBot"
+    agent-id="1ec1aa15-cdae-42b6-a98b-2c8661fb24e1"
+    language-code="fr">
+  </df-messenger>
+
+</body>
+</html>
